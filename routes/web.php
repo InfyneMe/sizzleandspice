@@ -14,4 +14,6 @@ Route::middleware('check.auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('menu', [MenueController::class, 'index'])->name('menu');
+    Route::get('menu/create', [MenueController::class, 'create'])->name('menu.create');
+    Route::post('menu/store', [MenueController::class, 'store'])->name('menu.store');
 });

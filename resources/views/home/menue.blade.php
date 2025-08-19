@@ -16,7 +16,7 @@
                 </svg>
             </div>
             <div>
-                <div class="text-2xl font-bold text-gray-900">6</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $indianCount }}</div>
                 <div class="text-sm text-gray-500">Indian Items</div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 </svg>
             </div>
             <div>
-                <div class="text-2xl font-bold text-gray-900">6</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $chineseCount }}</div>
                 <div class="text-sm text-gray-500">Chinese Items</div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 </svg>
             </div>
             <div>
-                <div class="text-2xl font-bold text-gray-900">6</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $healthyCount }}</div>
                 <div class="text-sm text-gray-500">Healthy Items</div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 </svg>
             </div>
             <div>
-                <div class="text-2xl font-bold text-gray-900">18<span class="text-sm text-gray-500">/20</span></div>
+                <div class="text-2xl font-bold text-gray-900">{{ $totalCount }}</div>
                 <div class="text-sm text-gray-500">Total Menu Items</div>
             </div>
         </div>
@@ -72,12 +72,12 @@
                 <h2 class="text-lg font-semibold mb-2">Menu Management</h2>
                 <p class="text-sm text-gray-500">Add, edit and manage your restaurant menu items</p>
             </div>
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors">
+            <a href="{{ route('menu.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 5v14M5 12h14"/>
                 </svg>
                 Add New Item
-            </button>
+            </a>
         </div>
     </div>
 
@@ -86,16 +86,16 @@
         <div class="border-b border-gray-200">
             <nav class="flex space-x-8 px-8">
                 <button onclick="showCategory('all')" id="tab-all" class="py-4 px-1 border-b-2 border-indigo-500 font-medium text-sm text-indigo-600 whitespace-nowrap">
-                    All Items (18)
+                    All Items ({{ $totalCount }})
                 </button>
                 <button onclick="showCategory('indian')" id="tab-indian" class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
-                    Indian (6)
+                    Indian ({{ $indianCount }})
                 </button>
                 <button onclick="showCategory('chinese')" id="tab-chinese" class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
-                    Chinese (6)
+                    Chinese ({{ $chineseCount }})
                 </button>
                 <button onclick="showCategory('healthy')" id="tab-healthy" class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
-                    Healthy Items (6)
+                    Healthy Items ({{ $healthyCount }})
                 </button>
             </nav>
         </div>
@@ -109,61 +109,54 @@
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Category</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Popular</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        @forelse($allItems as $item)
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Butter Chicken</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-orange-100 text-orange-700 font-medium">Indian</span></td>
-                            <td class="px-6 py-4">₹280</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td class="px-6 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->category_badge_class }}">
+                                    {{ $item->category }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->dietary_info)
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
+                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                </span>
+                                @else
+                                <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">{{ $item->formatted_price }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
+                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ $item->star_rating }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <form method="POST" action="" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Dal Tadka</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-orange-100 text-orange-700 font-medium">Indian</span></td>
-                            <td class="px-6 py-4">₹180</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">No menu items found</td>
                         </tr>
-                        <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Chicken Fried Rice</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">Chinese</span></td>
-                            <td class="px-6 py-4">₹250</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Hakka Noodles</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">Chinese</span></td>
-                            <td class="px-6 py-4">₹220</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">Out of Stock</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Greek Salad</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Healthy</span></td>
-                            <td class="px-6 py-4">₹320</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Quinoa Bowl</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Healthy</span></td>
-                            <td class="px-6 py-4">₹380</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -177,27 +170,49 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Popular</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        @forelse($indianItems as $item)
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Butter Chicken</td>
-                            <td class="px-6 py-4">₹280</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td class="px-6 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
+                            <td class="px-6 py-4">
+                                @if($item->dietary_info)
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
+                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                </span>
+                                @else
+                                <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">{{ $item->formatted_price }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
+                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ $item->star_rating }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <form method="POST" action="" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Dal Tadka</td>
-                            <td class="px-6 py-4">₹180</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No Indian items found</td>
                         </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -211,27 +226,49 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Popular</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        @forelse($chineseItems as $item)
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Chicken Fried Rice</td>
-                            <td class="px-6 py-4">₹250</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td class="px-6 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
+                            <td class="px-6 py-4">
+                                @if($item->dietary_info)
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
+                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                </span>
+                                @else
+                                <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">{{ $item->formatted_price }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
+                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ $item->star_rating }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <form method="POST" action="" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Hakka Noodles</td>
-                            <td class="px-6 py-4">₹220</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">Out of Stock</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No Chinese items found</td>
                         </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -245,27 +282,49 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Popular</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        @forelse($healthyItems as $item)
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Greek Salad</td>
-                            <td class="px-6 py-4">₹320</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td class="px-6 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
+                            <td class="px-6 py-4">
+                                @if($item->dietary_info)
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
+                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                </span>
+                                @else
+                                <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">{{ $item->formatted_price }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
+                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ $item->star_rating }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <form method="POST" action="" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">Quinoa Bowl</td>
-                            <td class="px-6 py-4">₹380</td>
-                            <td class="px-6 py-4"><span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Available</span></td>
-                            <td class="px-6 py-4">⭐⭐⭐⭐⭐</td>
-                            <td class="px-6 py-4"><div class="flex items-center gap-2"><button class="text-indigo-600 hover:text-indigo-800">Edit</button><button class="text-red-600 hover:text-red-800">Delete</button></div></td>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No healthy items found</td>
                         </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -299,21 +358,21 @@
                         <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
                         Available Items
                     </div>
-                    <span class="font-medium text-gray-600">17</span>
+                    <span class="font-medium text-gray-600">{{ $availableCount }}</span>
                 </li>
                 <li class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="inline-block w-2 h-2 rounded-full bg-red-500"></span>
                         Out of Stock
                     </div>
-                    <span class="font-medium text-gray-600">1</span>
+                    <span class="font-medium text-gray-600">{{ $outOfStockCount }}</span>
                 </li>
                 <li class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="inline-block w-2 h-2 rounded-full bg-yellow-500"></span>
                         Low Stock
                     </div>
-                    <span class="font-medium text-gray-600">0</span>
+                    <span class="font-medium text-gray-600">{{ $lowStockCount }}</span>
                 </li>
             </ul>
         </div>
@@ -321,22 +380,22 @@
 </div>
 
 <script>
-    function showCategory(category) {
-        // Hide all content divs
-        document.getElementById('content-all').classList.add('hidden');
-        document.getElementById('content-indian').classList.add('hidden');
-        document.getElementById('content-chinese').classList.add('hidden');
-        document.getElementById('content-healthy').classList.add('hidden');
-        
-        // Remove active classes from all tabs
-        document.getElementById('tab-all').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
-        document.getElementById('tab-indian').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
-        document.getElementById('tab-chinese').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
-        document.getElementById('tab-healthy').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
-        
-        // Show selected content and make tab active
-        document.getElementById('content-' + category).classList.remove('hidden');
-        document.getElementById('tab-' + category).className = 'py-4 px-1 border-b-2 border-indigo-500 font-medium text-sm text-indigo-600 whitespace-nowrap';
-    }
+function showCategory(category) {
+    // Hide all content divs
+    document.getElementById('content-all').classList.add('hidden');
+    document.getElementById('content-indian').classList.add('hidden');
+    document.getElementById('content-chinese').classList.add('hidden');
+    document.getElementById('content-healthy').classList.add('hidden');
+    
+    // Remove active classes from all tabs
+    document.getElementById('tab-all').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
+    document.getElementById('tab-indian').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
+    document.getElementById('tab-chinese').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
+    document.getElementById('tab-healthy').className = 'py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap';
+    
+    // Show selected content and make tab active
+    document.getElementById('content-' + category).classList.remove('hidden');
+    document.getElementById('tab-' + category).className = 'py-4 px-1 border-b-2 border-indigo-500 font-medium text-sm text-indigo-600 whitespace-nowrap';
+}
 </script>
 @endsection
