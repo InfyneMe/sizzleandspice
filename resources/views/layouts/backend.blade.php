@@ -162,7 +162,9 @@
                                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
                                 </svg>Orders<span class="ml-auto text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full">5</span></a></li>
                             
-                            <li><a class="flex items-center gap-3 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-colors" href="">
+                            <li>
+                                <a class="flex items-center gap-3 {{ request()->routeIs('table*') ? 'font-medium text-primary bg-indigo-50 dark:bg-indigo-900/30 border border-white/5' : 'hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700' }} px-3 py-2 rounded-lg transition-colors" 
+                                href="{{ route('table') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-armchair w-4 h-4">
                                     <path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"></path>
                                     <path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"></path>

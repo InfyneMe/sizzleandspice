@@ -2,7 +2,6 @@
 @section('title', 'Menu')
 
 @section('content')
-
 <div class="min-h-0">
     <!-- Header Stats - Menu Categories Overview -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -110,6 +109,8 @@
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Category</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Quantity</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Course</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
@@ -128,10 +129,28 @@
                             <td class="px-6 py-4">
                                 @if($item->dietary_info)
                                 <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
-                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                    {{ $item->dietary_info_icon }}
                                 </span>
                                 @else
                                 <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->quantity)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-blue-50 text-blue-700">
+                                        {{ $item->quantity_display ?? ucfirst($item->quantity) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->course_type)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                                        {{ $item->course_type_display ?? ucfirst(str_replace('_',' ', $item->course_type)) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">{{ $item->formatted_price }}</td>
@@ -154,7 +173,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">No menu items found</td>
+                            <td colspan="9" class="px-6 py-4 text-center text-gray-500">No menu items found</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -171,6 +190,8 @@
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Quantity</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Course</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
@@ -190,6 +211,24 @@
                                 <span class="text-gray-400">-</span>
                                 @endif
                             </td>
+                            <td class="px-6 py-4">
+                                @if($item->quantity)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-blue-50 text-blue-700">
+                                        {{ $item->quantity_display ?? ucfirst($item->quantity) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->course_type)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                                        {{ $item->course_type_display ?? ucfirst(str_replace('_',' ', $item->course_type)) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4">{{ $item->formatted_price }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
@@ -210,7 +249,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No Indian items found</td>
+                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">No Indian items found</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -227,6 +266,8 @@
                         <tr>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Quantity</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Course</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
                             <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
@@ -246,60 +287,22 @@
                                 <span class="text-gray-400">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">{{ $item->formatted_price }}</td>
                             <td class="px-6 py-4">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
-                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">{{ $item->star_rating }}</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
-                                    <form method="POST" action="" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No Chinese items found</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Healthy Items Tab Content -->
-        <div id="content-healthy" class="p-8 hidden">
-            <h2 class="text-lg font-semibold mb-4">Healthy Menu Items</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-left">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
-                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200 text-sm">
-                        @forelse($healthyItems as $item)
-                        <tr>
-                            <td class="px-6 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
-                            <td class="px-6 py-4">
-                                @if($item->dietary_info)
-                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
-                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
-                                </span>
+                                @if($item->quantity)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-blue-50 text-blue-700">
+                                        {{ $item->quantity_display ?? ucfirst($item->quantity) }}
+                                    </span>
                                 @else
-                                <span class="text-gray-400">-</span>
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->course_type)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                                        {{ $item->course_type_display ?? ucfirst(str_replace('_',' ', $item->course_type)) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">{{ $item->formatted_price }}</td>
@@ -322,7 +325,83 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No healthy items found</td>
+                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">No Chinese items found</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Healthy Items Tab Content -->
+        <div id="content-healthy" class="p-8 hidden">
+            <h2 class="text-lg font-semibold mb-4">Healthy Menu Items</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-left">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Item Name</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dietary</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Quantity</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Course</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Price</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Rating</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        @forelse($healthyItems as $item)
+                        <tr>
+                            <td class="px-6 py-4 font-semibold text-gray-900">{{ $item->name }}</td>
+                            <td class="px-6 py-4">
+                                @if($item->dietary_info)
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
+                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                </span>
+                                @else
+                                <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->quantity)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-blue-50 text-blue-700">
+                                        {{ $item->quantity_display ?? ucfirst($item->quantity) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($item->course_type)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                                        {{ $item->course_type_display ?? ucfirst(str_replace('_',' ', $item->course_type)) }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">{{ $item->formatted_price }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->status_badge_class }}">
+                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ $item->star_rating }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <form method="POST" action="" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">No healthy items found</td>
                         </tr>
                         @endforelse
                     </tbody>

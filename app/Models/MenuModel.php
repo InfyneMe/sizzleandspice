@@ -28,6 +28,8 @@ class MenuModel extends Model
         'preparation_time',
         'is_available',
         'discount_price',
+        'quantity',
+        'course_type',
     ];
 
     /**
@@ -40,31 +42,47 @@ class MenuModel extends Model
         'is_available' => 'boolean',
         'rating' => 'integer',
         'preparation_time' => 'integer',
-        'ingredients' => 'array', // This will automatically handle JSON conversion
+        'ingredients' => 'array',
+        'quantity' => 'string',
+        'course_type' => 'string',
     ];
 
     /**
      * Constants for status values
      */
-    const STATUS_AVAILABLE = 'available';
+    const STATUS_AVAILABLE   = 'available';
     const STATUS_OUT_OF_STOCK = 'out_of_stock';
-    const STATUS_LOW_STOCK = 'low_stock';
+    const STATUS_LOW_STOCK    = 'low_stock';
 
     /**
      * Constants for dietary info
      */
-    const DIETARY_VEG = 'veg';
-    const DIETARY_NON_VEG = 'non_veg';
-    const DIETARY_VEGAN = 'vegan';
+    const DIETARY_VEG         = 'veg';
+    const DIETARY_NON_VEG     = 'non_veg';
+    const DIETARY_VEGAN       = 'vegan';
     const DIETARY_GLUTEN_FREE = 'gluten_free';
-    const DIETARY_BOTH = 'both';
+    const DIETARY_BOTH        = 'both';
 
     /**
      * Constants for categories
      */
-    const CATEGORY_INDIAN = 'Indian';
+    const CATEGORY_INDIAN  = 'Indian';
     const CATEGORY_CHINESE = 'Chinese';
     const CATEGORY_HEALTHY = 'Healthy';
+
+    /**
+     * Constants for quantity
+     */
+    const QUANTITY_HALF = 'half';
+    const QUANTITY_FULL = 'full';
+
+    /**
+     * Constants for course types
+     */
+    const COURSE_STARTER     = 'starter';
+    const COURSE_MAIN_COURSE = 'main_course';
+    const COURSE_DESSERT     = 'dessert';
+    const COURSE_DRINK       = 'drink';
 
     /**
      * Scope for available items
@@ -72,7 +90,7 @@ class MenuModel extends Model
     public function scopeAvailable($query)
     {
         return $query->where('status', self::STATUS_AVAILABLE)
-                    ->where('is_available', true);
+                     ->where('is_available', true);
     }
 
     /**
@@ -124,6 +142,49 @@ class MenuModel extends Model
     }
 
     /**
+     * New scopes: quantity and course_type
+     */
+    public function scopeQuantity($query, string $quantity)
+    {
+        return $query->where('quantity', $quantity);
+    }
+
+    public function scopeHalf($query)
+    {
+        return $query->where('quantity', self::QUANTITY_HALF);
+    }
+
+    public function scopeFull($query)
+    {
+        return $query->where('quantity', self::QUANTITY_FULL);
+    }
+
+    public function scopeCourse($query, string $course)
+    {
+        return $query->where('course_type', $course);
+    }
+
+    public function scopeStarters($query)
+    {
+        return $query->where('course_type', self::COURSE_STARTER);
+    }
+
+    public function scopeMains($query)
+    {
+        return $query->where('course_type', self::COURSE_MAIN_COURSE);
+    }
+
+    public function scopeDesserts($query)
+    {
+        return $query->where('course_type', self::COURSE_DESSERT);
+    }
+
+    public function scopeDrinks($query)
+    {
+        return $query->where('course_type', self::COURSE_DRINK);
+    }
+
+    /**
      * Accessor for formatted price
      */
     public function getFormattedPriceAttribute()
@@ -144,7 +205,7 @@ class MenuModel extends Model
      */
     public function getStarRatingAttribute()
     {
-        return str_repeat('⭐', $this->rating);
+        return str_repeat('⭐', (int) $this->rating);
     }
 
     /**
@@ -163,8 +224,8 @@ class MenuModel extends Model
         if (!$this->discount_price || $this->discount_price >= $this->price) {
             return 0;
         }
-        
-        return round((($this->price - $this->discount_price) / $this->price) * 100);
+
+        return (int) round((($this->price - $this->discount_price) / $this->price) * 100);
     }
 
     /**
@@ -172,7 +233,7 @@ class MenuModel extends Model
      */
     public function isVegetarian()
     {
-        return in_array($this->dietary_info, [self::DIETARY_VEG, self::DIETARY_VEGAN, self::DIETARY_BOTH]);
+        return in_array($this->dietary_info, [self::DIETARY_VEG, self::DIETARY_VEGAN, self::DIETARY_BOTH], true);
     }
 
     /**
@@ -180,7 +241,7 @@ class MenuModel extends Model
      */
     public function isNonVegetarian()
     {
-        return in_array($this->dietary_info, [self::DIETARY_NON_VEG, self::DIETARY_BOTH]);
+        return in_array($this->dietary_info, [self::DIETARY_NON_VEG, self::DIETARY_BOTH], true);
     }
 
     /**
@@ -188,82 +249,114 @@ class MenuModel extends Model
      */
     public function canOrder()
     {
-        return $this->status === self::STATUS_AVAILABLE && $this->is_available;
+        return $this->status === self::STATUS_AVAILABLE && (bool) $this->is_available;
     }
 
     /**
-     * Get status badge class for UI
+     * UI helpers
      */
     public function getStatusBadgeClassAttribute()
     {
-        return match($this->status) {
-            self::STATUS_AVAILABLE => 'bg-green-100 text-green-700',
+        return match ($this->status) {
+            self::STATUS_AVAILABLE   => 'bg-green-100 text-green-700',
             self::STATUS_OUT_OF_STOCK => 'bg-red-100 text-red-700',
-            self::STATUS_LOW_STOCK => 'bg-yellow-100 text-yellow-700',
-            default => 'bg-gray-100 text-gray-700',
+            self::STATUS_LOW_STOCK    => 'bg-yellow-100 text-yellow-700',
+            default                   => 'bg-gray-100 text-gray-700',
         };
     }
 
-    /**
-     * Get category badge class for UI
-     */
     public function getCategoryBadgeClassAttribute()
     {
-        return match($this->category) {
-            self::CATEGORY_INDIAN => 'bg-orange-100 text-orange-700',
+        return match ($this->category) {
+            self::CATEGORY_INDIAN  => 'bg-orange-100 text-orange-700',
             self::CATEGORY_CHINESE => 'bg-red-100 text-red-700',
             self::CATEGORY_HEALTHY => 'bg-green-100 text-green-700',
-            default => 'bg-gray-100 text-gray-700',
+            default                => 'bg-gray-100 text-gray-700',
         };
     }
 
-    /**
-     * Get dietary info badge class for UI
-     */
     public function getDietaryInfoBadgeClassAttribute()
     {
-        return match($this->dietary_info) {
-            self::DIETARY_VEG => 'bg-green-100 text-green-700',
-            self::DIETARY_NON_VEG => 'bg-red-100 text-red-700',
-            self::DIETARY_VEGAN => 'bg-green-200 text-green-800',
+        return match ($this->dietary_info) {
+            self::DIETARY_VEG         => 'bg-green-100 text-green-700',
+            self::DIETARY_NON_VEG     => 'bg-red-100 text-red-700',
+            self::DIETARY_VEGAN       => 'bg-green-200 text-green-800',
             self::DIETARY_GLUTEN_FREE => 'bg-yellow-100 text-yellow-700',
-            self::DIETARY_BOTH => 'bg-blue-100 text-blue-700',
-            default => 'bg-gray-100 text-gray-700',
+            self::DIETARY_BOTH        => 'bg-blue-100 text-blue-700',
+            default                   => 'bg-gray-100 text-gray-700',
         };
     }
 
-    /**
-     * Get dietary info icon
-     */
     public function getDietaryInfoIconAttribute()
     {
-        return match($this->dietary_info) {
-            self::DIETARY_VEG => '🟢',
-            self::DIETARY_NON_VEG => '🔴',
-            self::DIETARY_VEGAN => '🌱',
+        return match ($this->dietary_info) {
+            self::DIETARY_VEG         => '🟢',
+            self::DIETARY_NON_VEG     => '🔴',
+            self::DIETARY_VEGAN       => '🌱',
             self::DIETARY_GLUTEN_FREE => '🌾',
-            self::DIETARY_BOTH => '🟡',
-            default => '⚪',
+            self::DIETARY_BOTH        => '🟡',
+            default                   => '⚪',
         };
     }
 
-    /**
-     * Get dietary info display name
-     */
     public function getDietaryInfoDisplayAttribute()
     {
-        return match($this->dietary_info) {
-            self::DIETARY_VEG => 'Vegetarian',
-            self::DIETARY_NON_VEG => 'Non-Vegetarian',
-            self::DIETARY_VEGAN => 'Vegan',
+        return match ($this->dietary_info) {
+            self::DIETARY_VEG         => 'Vegetarian',
+            self::DIETARY_NON_VEG     => 'Non-Veg',
+            self::DIETARY_VEGAN       => 'Vegan',
             self::DIETARY_GLUTEN_FREE => 'Gluten-Free',
-            self::DIETARY_BOTH => 'Both',
-            default => 'Not Specified',
+            self::DIETARY_BOTH        => 'Both',
+            default                   => 'Not Specified',
         };
     }
 
     /**
-     * Static method to get all categories
+     * New display helpers
+     */
+    public function getQuantityDisplayAttribute(): string
+    {
+        return match ($this->quantity) {
+            self::QUANTITY_HALF => 'Half',
+            self::QUANTITY_FULL => 'Full',
+            default             => ucfirst((string) $this->quantity),
+        };
+    }
+
+    public function getCourseTypeDisplayAttribute(): string
+    {
+        return match ($this->course_type) {
+            self::COURSE_STARTER     => 'Starter',
+            self::COURSE_MAIN_COURSE => 'MainCourse',
+            self::COURSE_DESSERT     => 'Dessert',
+            self::COURSE_DRINK       => 'Drink',
+            default                  => ucfirst((string) $this->course_type),
+        };
+    }
+
+    /**
+     * Static option providers (useful for forms/filters)
+     */
+    public static function getQuantityOptions(): array
+    {
+        return [
+            self::QUANTITY_HALF => 'Half',
+            self::QUANTITY_FULL => 'Full',
+        ];
+    }
+
+    public static function getCourseTypeOptions(): array
+    {
+        return [
+            self::COURSE_STARTER     => 'Starter',
+            self::COURSE_MAIN_COURSE => 'Main Course',
+            self::COURSE_DESSERT     => 'Dessert',
+            self::COURSE_DRINK       => 'Drink',
+        ];
+    }
+
+    /**
+     * Existing static methods
      */
     public static function getCategories()
     {
@@ -274,29 +367,23 @@ class MenuModel extends Model
         ];
     }
 
-    /**
-     * Static method to get all status options
-     */
     public static function getStatusOptions()
     {
         return [
-            self::STATUS_AVAILABLE => 'Available',
+            self::STATUS_AVAILABLE    => 'Available',
             self::STATUS_OUT_OF_STOCK => 'Out of Stock',
-            self::STATUS_LOW_STOCK => 'Low Stock',
+            self::STATUS_LOW_STOCK    => 'Low Stock',
         ];
     }
 
-    /**
-     * Static method to get all dietary info options
-     */
     public static function getDietaryInfoOptions()
     {
         return [
-            self::DIETARY_VEG => 'Vegetarian',
-            self::DIETARY_NON_VEG => 'Non-Vegetarian',
-            self::DIETARY_VEGAN => 'Vegan',
+            self::DIETARY_VEG         => 'Vegetarian',
+            self::DIETARY_NON_VEG     => 'Non-Vegetarian',
+            self::DIETARY_VEGAN       => 'Vegan',
             self::DIETARY_GLUTEN_FREE => 'Gluten-Free',
-            self::DIETARY_BOTH => 'Both Veg & Non-Veg',
+            self::DIETARY_BOTH        => 'Both Veg & Non-Veg',
         ];
     }
 }
