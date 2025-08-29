@@ -38,6 +38,15 @@
             </div>
         </div>
     </div>
+    <div class="mb-6 bg-green-50 p-4 rounded-xl shadow-inner border border-green-200">
+        <p class="text-lg font-semibold text-green-800">
+            Total Amount (Completed): 
+            <span class="font-extrabold text-green-900">
+                ₹{{ number_format($orders->where('status', 'completed')->sum(fn($order) => $order->subtotal + $order->gst), 2) }}
+            </span>
+        </p>
+    </div>
+
 
     <!-- Filter Form -->
     <form method="GET" action="{{ route('order.history') }}"
