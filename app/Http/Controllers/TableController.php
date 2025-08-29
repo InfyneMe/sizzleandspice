@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrdersModel;
 use Illuminate\Http\Request;
 use App\Models\TableModel;
 
@@ -39,7 +40,6 @@ class TableController extends Controller
     {
         $validated = $request->validate([
             'number' => ['required','integer','min:1','unique:tables,number'],
-            'status' => ['required','in:active,inactive'],
             'capacity' => ['required','integer','in:2,3,4,5,6'],
             'qr_link' => ['nullable','url','max:2048'],
             'notes' => ['nullable','string','max:255'],
@@ -48,5 +48,22 @@ class TableController extends Controller
         TableModel::create($validated);
 
         return redirect()->route('table')->with('success', 'Table created successfully.');
+    }
+    public function destroy($id)
+    {
+        try {
+            $table = TableModel::findOrFail($id);
+
+            $orders = OrdersModel::where('table_id', $id)->first();
+            if($orders){
+                return redirect()->back()->with('error', 'Cannot delete this table because there are existing orders linked to it.');
+            }
+            $table->delete();
+
+            return redirect()->route('table')->with('success', 'Table deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+       
     }
 }

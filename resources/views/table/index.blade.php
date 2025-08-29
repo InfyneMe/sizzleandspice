@@ -3,6 +3,16 @@
 
 @section('content')
 <div class="min-h-0">
+    @if (session('success'))
+        <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-lg">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg">
+            {{ session('error') }}
+        </div>
+    @endif
     <!-- Header / Actions -->
     <div class="bg-white rounded-xl shadow-md p-6 mb-6">
         <div class="flex items-center justify-between flex-wrap gap-4">
@@ -157,14 +167,13 @@
                                 <a href="" class="text-emerald-700 hover:text-emerald-900">QR</a>
                                 @endif
 
-                                @if(Route::has('tables.destroy'))
-                                <form method="POST" action="" class="inline"
-                                      onsubmit="return confirm('Delete this table? This action cannot be undone.')">
+                                <form method="POST" action="{{ route('tables.destroy', $t->id) }}" class="inline"
+                                    onsubmit="return confirm('Delete this table? This action cannot be undone.')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800">Delete</button>
                                 </form>
-                                @endif
+
                             </div>
                         </td>
                     </tr>

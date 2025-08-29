@@ -33,7 +33,7 @@
                 </div>
 
                 <!-- Status -->
-                <div>
+                {{-- <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                         Status *
                     </label>
@@ -45,7 +45,7 @@
                     @error('status')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </div>
+                </div> --}}
 
                 <!-- Capacity -->
                 <div>

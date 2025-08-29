@@ -27,6 +27,8 @@ Route::middleware('check.auth')->group(function () {
     Route::get('table', [TableController::class, 'index'])->name('table');
     Route::get('table/create', [TableController::class, 'tableCreate'])->name('table.create');
     Route::post('tables/store', [TableController::class, 'store'])->name('tables.store');
+    Route::delete('/tables/{table}', [TableController::class, 'destroy'])->name('tables.destroy');
+
 
     //order routes
     Route::get('order', [OrderController::class, 'orders'])->name('order');
