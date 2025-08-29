@@ -162,12 +162,17 @@
                             <td class="px-6 py-4">{{ $item->star_rating }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
-                                    <a href="" class="text-indigo-600 hover:text-indigo-800">Edit</a>
-                                    <form method="POST" action="" class="inline">
+                                    <a href="{{ route('menu.edit', $item->id) }}" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <form method="POST" action="{{ route('menu.destroy', $item->id) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                        <button type="submit" 
+                                                onclick="return confirm('Are you sure you want to delete this menu item?')" 
+                                                class="text-red-600 hover:text-red-800">
+                                            Delete
+                                        </button>
                                     </form>
+
                                 </div>
                             </td>
                         </tr>

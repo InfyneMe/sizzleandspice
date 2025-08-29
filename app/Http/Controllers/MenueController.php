@@ -91,23 +91,50 @@ class MenueController extends Controller
             ? (bool) $request->boolean('is_available')
             : true;
 
-        Menu::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'category' => $validated['category'],
-            'price' => $validated['price'],
-            'image' => null, // set when you add file upload
-            'status' => $validated['status'],
-            'is_popular' => $validated['is_popular'],
-            'rating' => $validated['rating'],
-            'ingredients' => [], // set from UI if you add it
-            'dietary_info' => $validated['dietary_info'] ?? null,
-            'preparation_time' => $validated['preparation_time'] ?? null,
-            'is_available' => $validated['is_available'],
-            'discount_price' => $validated['discount_price'] ?? null,
-            'quantity' => $validated['quantity'],
-            'course_type' => $validated['course_type'],
-        ]);
+        if ($request->id) {
+            // ✅ UPDATE
+            $menu = Menu::findOrFail($request->id);
+            $menu->update([
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
+                'category' => $validated['category'],
+                'price' => $validated['price'],
+                'image' => $menu->image, // keep old image for now
+                'status' => $validated['status'],
+                'is_popular' => $validated['is_popular'],
+                'rating' => $validated['rating'],
+                'ingredients' => $menu->ingredients ?? [], // keep old or update later
+                'dietary_info' => $validated['dietary_info'] ?? null,
+                'preparation_time' => $validated['preparation_time'] ?? null,
+                'is_available' => $validated['is_available'],
+                'discount_price' => $validated['discount_price'] ?? null,
+                'quantity' => $validated['quantity'],
+                'course_type' => $validated['course_type'],
+            ]);
+
+            return redirect()->route('menu')->with('success', 'Menu item updated successfully!');
+        } else {
+            // ✅ CREATE
+            Menu::create([
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
+                'category' => $validated['category'],
+                'price' => $validated['price'],
+                'image' => null, // will handle file upload later
+                'status' => $validated['status'],
+                'is_popular' => $validated['is_popular'],
+                'rating' => $validated['rating'],
+                'ingredients' => [], // empty for now
+                'dietary_info' => $validated['dietary_info'] ?? null,
+                'preparation_time' => $validated['preparation_time'] ?? null,
+                'is_available' => $validated['is_available'],
+                'discount_price' => $validated['discount_price'] ?? null,
+                'quantity' => $validated['quantity'],
+                'course_type' => $validated['course_type'],
+            ]);
+
+            return redirect()->route('menu')->with('success', 'Menu item created successfully!');
+        }
 
         return redirect()->route('menu')->with('success', 'Menu item created successfully!');
     }
@@ -128,6 +155,18 @@ class MenueController extends Controller
         $menu->update($request->all());
 
         return redirect()->route('menu')->with('success', 'Menu item updated successfully!');
+    }
+    public function edit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        return view('home.create-menue', compact('menu'));
+    }
+    public function destroy($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->delete();
+
+        return redirect()->route('menu')->with('success', 'Menu item deleted successfully!');
     }
 
 
