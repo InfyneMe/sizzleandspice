@@ -1,95 +1,168 @@
 @extends('layouts.backend')
-@section('title', 'Dashboard')
+@section('title', 'Restaurant Dashboard')
 
 @section('content')
-<div class="container mx-auto py-10 space-y-8">
 
-    <!-- Summary Cards: Orders & Status -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
-        <x-card color="indigo" icon="📦" title="Total Orders" :value="$totalOrders" />
-        <x-card color="blue" icon="🥡" title="Total Takeaway" :value="$totalTakeaway" />
-        <x-card color="red" icon="❌" title="Total Cancelled" :value="$totalCancelled" />
-        <x-card color="yellow" icon="⏳" title="Pending Orders" :value="$totalPending" />
-    </div>
+<div class=" bg-gray-100 p-8 text-gray-900 font-sans">
 
-    <!-- Growth Metrics -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <x-growth title="Monthly Growth" :percentage="$monthlyGrowth" />
-        <x-growth title="Daily Growth" :percentage="$dailyGrowth" />
-    </div>
-
-    <!-- Most Ordered Items & Categories -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-2xl shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Most Ordered Item</h2>
-            <p class="text-3xl font-bold">{{ $mostOrderedItem->name ?? 'N/A' }}</p>
-            <p class="text-gray-600">{{ $mostOrderedItem->quantity ?? 0 }} orders</p>
+    <!-- Stats Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold">120</span>
+                <span class="bg-gray-900 text-white rounded p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-xs text-gray-500">Total Menus</span>
+                <span class="text-xs text-gray-500">45%</span>
+            </div>
+            <div class="w-full h-1 bg-gray-200 rounded mt-2">
+                <div class="h-1 bg-gray-900 rounded" style="width: 45%"></div>
+            </div>
         </div>
-        <div class="bg-white rounded-2xl shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Category Totals</h2>
-            <ul>
-                @foreach(['starter', 'main_course', 'drinks', 'dessert'] as $cat)
-                <li class="flex justify-between border-b py-2 last:border-none text-sm text-gray-700">
-                    <span class="capitalize">{{ str_replace('_', ' ', $cat) }}</span>
-                    <span>{{ $categoryTotals[$cat] ?? 0 }}</span>
-                </li>
-                @endforeach
-            </ul>
-        </div>
-    </div>
 
-    <!-- Recent 5 Orders -->
-    <div class="bg-white rounded-2xl shadow p-6">
-        <h2 class="text-lg font-semibold mb-6">Recent 5 Orders</h2>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold">180</span>
+                <span class="bg-purple-100 text-purple-600 rounded p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor"><path d="M12 17V9M9 12l3-3 3 3"/></svg>
+                </span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-xs text-gray-500">Total Orders Today</span>
+                <span class="text-xs text-gray-500">62%</span>
+            </div>
+            <div class="w-full h-1 bg-gray-200 rounded mt-2">
+                <div class="h-1 bg-purple-500 rounded" style="width: 62%"></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold">240</span>
+                <span class="bg-green-100 text-green-600 rounded p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor"><path d="M15 12a3 3 0 1 0-6 0"/></svg>
+                </span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-xs text-gray-500">Total Client Today</span>
+                <span class="text-xs text-gray-500">80%</span>
+            </div>
+            <div class="w-full h-1 bg-gray-200 rounded mt-2">
+                <div class="h-1 bg-green-500 rounded" style="width: 80%"></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between h-32">
+            <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold">140</span>
+                <span class="bg-pink-100 text-pink-600 rounded p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor"><path d="M12 20V10M12 6v.01"/></svg>
+                </span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-xs text-gray-500">Revenue Day Ratio</span>
+                <span class="text-xs text-gray-500">85%</span>
+            </div>
+            <div class="w-full h-1 bg-gray-200 rounded mt-2">
+                <div class="h-1 bg-pink-500 rounded" style="width: 85%"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Graphs -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-white rounded-xl shadow p-6">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-bold text-lg">Revenue</h2>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1 bg-black text-white rounded text-xs font-semibold">Monthly</button>
+                    <button class="px-3 py-1 text-black border border-gray-200 rounded text-xs font-semibold">Weekly</button>
+                    <button class="px-3 py-1 text-black border border-gray-200 rounded text-xs font-semibold">Today</button>
+                </div>
+            </div>
+            <div class="mt-4 mb-2">
+                <!-- REPLACE: Insert chart.js or img here -->
+                <img src="https://via.placeholder.com/570x200?text=Revenue+Chart" class="w-full h-40 object-contain rounded" alt="Revenue Chart" />
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-bold text-lg">Orders Summary</h2>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1 text-black border border-gray-200 rounded text-xs font-semibold">Monthly</button>
+                    <button class="px-3 py-1 bg-black text-white rounded text-xs font-semibold">Weekly</button>
+                    <button class="px-3 py-1 text-black border border-gray-200 rounded text-xs font-semibold">Today</button>
+                </div>
+            </div>
+            <div class="mt-4 mb-2">
+                <!-- REPLACE: Insert chart.js or img here -->
+                <img src="https://via.placeholder.com/400x200?text=Orders+Chart" class="w-full h-40 object-contain rounded" alt="Orders Chart" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Order List Table -->
+    <section class="bg-white rounded-xl shadow p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg">Order List</h2>
+            <div class="flex gap-2">
+                <button class="px-3 py-1 bg-black text-white rounded text-xs font-semibold">Monthly</button>
+                <button class="px-3 py-1 text-black border border-gray-200 rounded text-xs font-semibold">Weekly</button>
+                <button class="px-3 py-1 text-black border border-gray-200 rounded text-xs font-semibold">Today</button>
+            </div>
+        </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50">
+            <table class="min-w-full text-left text-gray-700">
+                <thead>
                     <tr>
-                        <th class="px-4 py-2 text-left text-gray-600 uppercase">Order ID</th>
-                        <th class="px-4 py-2 text-left text-gray-600 uppercase">Type</th>
-                        <th class="px-4 py-2 text-left text-gray-600 uppercase">Status</th>
-                        <th class="px-4 py-2 text-left text-gray-600 uppercase">Amount</th>
-                        <th class="px-4 py-2 text-left text-gray-600 uppercase">Date</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">No</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">ID</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">Date</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">Customer Name</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">Location</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">Amount</th>
+                        <th class="py-2 px-5 text-xs font-bold text-gray-500">Status Order</th>
+                        <th class="py-2 px-5 text-xs font-bold"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @foreach ($recentOrders as $order)
-                    <tr>
-                        <td class="px-4 py-2 font-mono font-semibold text-gray-900">#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-4 py-2 capitalize">{{ $order->order_type }}</td>
-                        <td class="px-4 py-2">
-                            <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold
-                            {{ $order->status == 'completed' ? 'bg-green-100 text-green-800' : ($order->status == 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
-                                {{ ucfirst($order->status) }}
-                            </span>
+                <tbody>
+                    <tr class="border-t">
+                        <td class="py-3 px-5">1</td>
+                        <td class="py-3 px-5 font-mono">#12345</td>
+                        <td class="py-3 px-5">Jan 24th, 2020</td>
+                        <td class="py-3 px-5">Roberto Carlo</td>
+                        <td class="py-3 px-5">Corner Street 5th Londo</td>
+                        <td class="py-3 px-5">$34.20</td>
+                        <td class="py-3 px-5">
+                            <span class="inline-block px-2 py-1 rounded bg-gray-100 text-gray-600 text-xs">New Order</span>
                         </td>
-                        <td class="px-4 py-2 font-semibold text-blue-700">₹{{ number_format($order->subtotal + $order->gst, 2) }}</td>
-                        <td class="px-4 py-2 text-gray-600">{{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</td>
+                        <td class="py-3 px-5">
+                            <button class="text-xl text-gray-400 hover:text-black">...</button>
+                        </td>
                     </tr>
-                    @endforeach
+                    <tr>
+                        <td class="py-3 px-5">2</td>
+                        <td class="py-3 px-5 font-mono">#12366</td>
+                        <td class="py-3 px-5">Jan 22nd, 2020</td>
+                        <td class="py-3 px-5">Rohmad Khoir</td>
+                        <td class="py-3 px-5">Lando Street 5th Yogos</td>
+                        <td class="py-3 px-5">$44.25</td>
+                        <td class="py-3 px-5">
+                            <span class="inline-block px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs">On Delivery</span>
+                        </td>
+                        <td class="py-3 px-5">
+                            <button class="text-xl text-gray-400 hover:text-black">...</button>
+                        </td>
+                    </tr>
+                    <!-- repeat row as needed -->
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <!-- Hardcoded Most Visited Customers -->
-    <div class="bg-white rounded-2xl shadow p-6">
-        <h2 class="text-lg font-semibold mb-6">Most Visited Customers</h2>
-        <ul class="divide-y divide-gray-100">
-            @foreach ([
-                ['name' => 'Akash Kumar', 'visits' => 18],
-                ['name' => 'Neha Singh', 'visits' => 15],
-                ['name' => 'Vivek Rao', 'visits' => 12],
-                ['name' => 'Priya Patel', 'visits' => 11],
-                ['name' => 'Suman Jain', 'visits' => 9],
-            ] as $customer)
-            <li class="py-3 flex justify-between text-gray-700">
-                <span>{{ $customer['name'] }}</span>
-                <span class="font-semibold">{{ $customer['visits'] }} visits</span>
-            </li>
-            @endforeach
-        </ul>
-    </div>
+    </section>
 
 </div>
 @endsection

@@ -162,15 +162,15 @@
                                     <rect width="7" height="5" x="3" y="16" rx="1"></rect>
                                 </svg>Dashboard</a></li>
                             
-                            <li>
+                            {{-- <li>
                                 <a class="flex items-center gap-3 {{ request()->routeIs('order*') ? 'font-medium text-primary bg-indigo-50 dark:bg-indigo-900/30 border border-white/5' : 'hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700' }} px-3 py-2 rounded-lg transition-colors" 
                                 href="{{ route('order') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-4 h-4">
                                     <circle cx="8" cy="21" r="1"></circle>
                                     <circle cx="19" cy="21" r="1"></circle>
                                     <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-                                </svg>Orders<span class="ml-auto text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full">{{ \App\Models\OrdersModel::count() }}</span></a></li>
-                            
+                                </svg>New Order<span class="ml-auto text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full">{{ \App\Models\OrdersModel::count() }}</span></a>
+                            </li> --}}
                             <li>
                                 <a class="flex items-center gap-3 {{ request()->routeIs('table*') ? 'font-medium text-primary bg-indigo-50 dark:bg-indigo-900/30 border border-white/5' : 'hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700' }} px-3 py-2 rounded-lg transition-colors" 
                                 href="{{ route('table') }}">
@@ -200,8 +200,12 @@
                         <p class="uppercase text-xs text-gray-400 dark:text-gray-500 mb-3 font-medium">Operations</p>
                         <ul class="space-y-4 pl-4 border-l border-gray-200 dark:border-gray-700">
                             <li class="flex items-center gap-2 text-sm">
+                                <span class="w-2 h-2 bg-zinc-500 rounded-full"></span>
+                                <a href="{{ route('order') }}" class="hover:text-primary">New Order</a>
+                            </li>
+                            <li class="flex items-center gap-2 text-sm">
                                 <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                                <a href="{{ route('current.orders') }}" class="hover:text-primary">Current Orders</a>
+                                <a href="{{ route('current.orders') }}" class="hover:text-primary">Running Orders</a>
                             </li>
                             <li class="flex items-center gap-2 text-sm">
                                 <span class="w-2 h-2 bg-blue-500 rounded-full"></span>

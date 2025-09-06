@@ -210,7 +210,7 @@
                             <td class="px-6 py-4">
                                 @if($item->dietary_info)
                                 <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
-                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                    {{ $item->dietary_info_icon }}
                                 </span>
                                 @else
                                 <span class="text-gray-400">-</span>
@@ -286,7 +286,7 @@
                             <td class="px-6 py-4">
                                 @if($item->dietary_info)
                                 <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
-                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                    {{ $item->dietary_info_icon }}
                                 </span>
                                 @else
                                 <span class="text-gray-400">-</span>
@@ -362,7 +362,7 @@
                             <td class="px-6 py-4">
                                 @if($item->dietary_info)
                                 <span class="inline-flex items-center px-2 py-1 rounded-full {{ $item->dietary_info_badge_class }}">
-                                    {{ $item->dietary_info_icon }} {{ $item->dietary_info_display }}
+                                    {{ $item->dietary_info_icon }}
                                 </span>
                                 @else
                                 <span class="text-gray-400">-</span>
